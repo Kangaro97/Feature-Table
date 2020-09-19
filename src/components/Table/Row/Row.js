@@ -1,14 +1,17 @@
 import React from 'react';
 
-const row = (props) => {
-    return (
-        <tr>
-            <td>{props.data.id}</td>
-            <td>{props.data.firstName}</td>
-            <td>{props.data.lastName}</td>
-            <td>{props.data.email}</td>
-            <td>{props.data.phone}</td>
-        </tr>
-    );
-}
+const row = ({ data, onRowClicked }) => {
+	const onClicked = () => {
+		onRowClicked(data.id);
+	};
+	return (
+		<tr onClick={onClicked}>
+			<td>{data.id}</td>
+			<td>{data.firstName}</td>
+			<td>{data.lastName}</td>
+			<td>{data.email}</td>
+			<td>{data.phone}</td>
+		</tr>
+	);
+};
 export default row;

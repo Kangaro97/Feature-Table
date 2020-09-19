@@ -1,9 +1,9 @@
 import React from 'react';
 
-const loadButton = (props) => {
+const loadButton = ({type, buttonClicked}) => {
     let volumeType = '';
 
-    switch (props.type) {
+    switch (type) {
         case 'small':
             volumeType = 'малый'
             break;
@@ -15,7 +15,7 @@ const loadButton = (props) => {
     }
 
     return (
-        <button onClick={props.clicked}>Загрузить {volumeType} объём</button>
+        <button onClick={buttonClicked}>Загрузить {volumeType} объём</button>
     );
 };
 

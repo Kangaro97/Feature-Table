@@ -1,0 +1,37 @@
+
+.HeaderCell {
+    cursor: pointer;
+    text-align: left;
+    color: #585858;
+}
+
+.HeaderCell:hover {
+    color: #000;
+    transition-duration: 0.4s;
+}
+
+.HeaderCell::after {
+    display: none;
+    content: '↑';
+    transition: transform 0.4s, display 1s;
+}
+
+.ascending {
+    color: #000;
+    text-decoration: underline;
+}
+
+.ascending::after {
+    display: inline-block;
+}
+
+
+.descending {
+    color: #000;
+    text-decoration: underline;
+}
+
+.descending::after {
+    display: inline-block;
+    transform: rotate(180deg);
+}

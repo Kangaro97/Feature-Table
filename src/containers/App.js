@@ -13,10 +13,8 @@ export default class App extends React.Component {
 	};
 	rowsOnPage = 50;
 	state = {
-		tableData: {
-			data: [],
-			currentPage: 1,
-		},
+		data: [],
+		sort: { key: null, order: null },
 		isLoading: false,
 		userInfo: {},
 	};
@@ -26,7 +24,8 @@ export default class App extends React.Component {
 		this.loadJSON(url)
 			.then((res) => {
 				console.log(res);
-				this.setState({ tableData: { data: res }, isLoading: false });
+				this.setState({ data: res, isLoading: false });
+				
 			})
 			.catch((err) => {
 				console.error(err);
@@ -41,9 +40,26 @@ export default class App extends React.Component {
 			.catch((err) => console.error(err));
 	};
 
+	sortData = (key, order) => {
+		this.setState();
+		const unsorted = [...this.state.data];
+		const sorted = unsorted.sort((a, b) => {
+			if (a[key] < b[key]) {
+				return order === 'ascending' ? -1 : 1;
+			}
+			if (a[key] > b[key]) {
+				return order === 'ascending' ? 1 : -1;
+			}
+			return 0;
+		});
+		console.log(sorted);
+		//TODO: show process of reloading component? When 'sort' should be added?
+		this.setState({ data: sorted , sort: { key, order } });
+	};
+
 	showInfo = (id) => {
 		if (id) {
-			const info = this.state.tableData.data.find((item) => item.id === id);
+			const info = this.state.data.find((item) => item.id === id);
 			this.setState({ userInfo: info });
 		}
 	};
@@ -60,16 +76,18 @@ export default class App extends React.Component {
 		if (Object.keys(this.state.userInfo).length !== 0) {
 			userInfo = <UserInfo data={this.state.userInfo} />;
 		} else {
-      userInfo = null;
-    }
+			userInfo = null;
+		}
 
 		let table;
-		if (Object.keys(this.state.tableData.data).length !== 0) {
+		if (Object.keys(this.state.data).length !== 0) {
 			table = (
 				<Table
-					data={this.state.tableData.data}
+					data={this.state.data}
+					sort={this.state.sort}
 					onRowClicked={this.showInfo}
-					sortData={null}></Table>
+					sortData={this.sortData}
+				/>
 			);
 		} else {
 			table = null;

@@ -2,22 +2,21 @@ import React from 'react';
 import Row from './Row/Row';
 import THeader from './TableHeader/TableHeader';
 
-const table = ({data, onRowClicked}) => {
-	let rows = data.map(
-		({ id, firstName, lastName, email, phone }) => {
-			return {
-				id,
-				firstName,
-				lastName,
-				email,
-				phone,
-			};
-		}
-	);
+const table = ({ data, sort, onRowClicked, sortData }) => {
+	console.log('tableData from Table', sort);
+	let rows = data.map(({ id, firstName, lastName, email, phone }) => {
+		return {
+			id,
+			firstName,
+			lastName,
+			email,
+			phone,
+		};
+	});
 	return (
 		<table className="Table">
 			<thead>
-				<THeader />
+				<THeader sort={sort} sortData={sortData}  />
 			</thead>
 			<tbody>
 				{rows.map((row, i) => (

@@ -1,9 +1,7 @@
 import React from 'react';
 import Row from './Row/Row';
-import THeader from './TableHeader/TableHeader';
 
-const table = ({ data, sort, onRowClicked, sortData }) => {
-	console.log('tableData from Table', sort);
+const table = ({ children, data, onRowClicked }) => {
 	let rows = data.map(({ id, firstName, lastName, email, phone }) => {
 		return {
 			id,
@@ -15,9 +13,8 @@ const table = ({ data, sort, onRowClicked, sortData }) => {
 	});
 	return (
 		<table className="Table">
-			<thead>
-				<THeader sort={sort} sortData={sortData}  />
-			</thead>
+			<thead>{children}</thead>
+
 			<tbody>
 				{rows.map((row, i) => (
 					<Row data={row} key={i} onRowClicked={onRowClicked} />

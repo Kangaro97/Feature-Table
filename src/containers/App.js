@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Table from '../components/Table/Table';
 import LoadButton from '../components/Button/LoadButton';
+import Filter from '../components/Filter/Filter';
 import UserInfo from '../components/UserInfo/UserInfo';
+import THeader from '../components/Table/TableHeader/TableHeader';
+import loadJSON from '../lib/load';
+import sort from '../lib/sort';
+import filter from '../lib/filter';
 
-export default class App extends React.Component {
+export default class App extends Component {
 	url = {
 		small:
 			'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}',
@@ -14,18 +19,19 @@ export default class App extends React.Component {
 	rowsOnPage = 50;
 	state = {
 		data: [],
-		sort: { key: null, order: null },
+		isFiltered: false,
+		filtered: [],
+		sortParam: { key: null, order: null },
 		isLoading: false,
 		userInfo: {},
 	};
 
 	getJSON = (url) => {
 		this.setState({ isLoading: true });
-		this.loadJSON(url)
+		loadJSON(url)
 			.then((res) => {
 				console.log(res);
 				this.setState({ data: res, isLoading: false });
-				
 			})
 			.catch((err) => {
 				console.error(err);
@@ -33,28 +39,28 @@ export default class App extends React.Component {
 			});
 	};
 
-	loadJSON = (url) => {
-		return fetch(url)
-			.then((res) => (res = res.json()))
-			.then((data) => data)
-			.catch((err) => console.error(err));
-	};
-
-	sortData = (key, order) => {
-		this.setState();
-		const unsorted = [...this.state.data];
-		const sorted = unsorted.sort((a, b) => {
-			if (a[key] < b[key]) {
-				return order === 'ascending' ? -1 : 1;
-			}
-			if (a[key] > b[key]) {
-				return order === 'ascending' ? 1 : -1;
-			}
-			return 0;
-		});
+	sortFunc = (key, order) => {
+		const unsorted = this.state.isFiltered
+			? [...this.state.filtered]
+			: [...this.state.data];
+		const sorted = sort(unsorted, key, order);
 		console.log(sorted);
 		//TODO: show process of reloading component? When 'sort' should be added?
-		this.setState({ data: sorted , sort: { key, order } });
+		this.setState({ sortParam: { key, order } });
+		this.state.isFiltered
+			? this.setState({ filtered: sorted })
+			: this.setState({ data: sorted });
+	};
+
+	filterFunc = (filterStr) => {
+		console.log('filterStr from App: ', filterStr);
+		const filtered = filter(this.state.data, filterStr);
+		console.log('filtered from App: ', filtered);
+		this.setState({ filtered, isFiltered: true });
+	};
+
+	resetFilter = () => {
+		this.setState({ isFiltered: false, sortParam: { key: null, order: null } });
 	};
 
 	showInfo = (id) => {
@@ -79,15 +85,20 @@ export default class App extends React.Component {
 			userInfo = null;
 		}
 
+		let filter;
 		let table;
 		if (Object.keys(this.state.data).length !== 0) {
+			filter = (
+				<Filter filterFunc={this.filterFunc} resetFilter={this.resetFilter} />
+			);
 			table = (
 				<Table
-					data={this.state.data}
-					sort={this.state.sort}
+					data={this.state.isFiltered ? this.state.filtered : this.state.data}
+					sortParam={this.state.sortParam}
 					onRowClicked={this.showInfo}
-					sortData={this.sortData}
-				/>
+					sortFunc={this.sortFunc}>
+					<THeader sortParam={this.state.sortParam} sortFunc={this.sortFunc} />
+				</Table>
 			);
 		} else {
 			table = null;
@@ -104,8 +115,11 @@ export default class App extends React.Component {
 					buttonClicked={this.getJSON.bind(this, this.url.big)}
 				/>
 				{loginStatus}
-				{table}
-				{userInfo}
+				<div>
+					{filter}
+					{table}
+					{userInfo}
+				</div>
 			</div>
 		);
 	}

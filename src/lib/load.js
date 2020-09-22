@@ -4,5 +4,4 @@ const loadJSON = (url) => {
 		.then((data) => data)
 		.catch((err) => console.error(err));
 };
-
 export default loadJSON;

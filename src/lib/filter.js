@@ -6,5 +6,4 @@ const filter = (data, filterStr) => {
 		return hasMatch;
 	});
 };
-
 export default filter;

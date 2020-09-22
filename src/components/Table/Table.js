@@ -14,13 +14,13 @@ const table = ({ children, data, onRowClicked }) => {
 	return (
 		<table className="Table">
 			<thead>{children}</thead>
-
 			<tbody>
 				{rows.map((row, i) => (
 					<Row data={row} key={i} onRowClicked={onRowClicked} />
 				))}
 			</tbody>
 		</table>
+
 	);
 };
 

@@ -9,5 +9,4 @@ const sort = (array, key, order) => {
 		return 0;
 	});
 };
-
 export default sort;

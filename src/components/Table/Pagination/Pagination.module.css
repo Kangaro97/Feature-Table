@@ -1,0 +1,37 @@
+.menu li {
+    display: inline-block;
+    margin: 0 .3rem;
+    
+}
+
+.button {
+    padding: .5rem;
+    text-decoration: none;
+    background-color: #fff;
+    color: #0066ff;
+    border: 1px solid #0066ff;
+    border-radius: 0.3rem;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    text-align: center;
+    transition-duration: .5s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.button:focus {
+    border: 2px solid #20232a;
+    color: #20232a;
+}
+
+.button:hover {
+    color: #fff;
+    background-color: #0066ff;
+}
+
+.button.current {
+    background-color: #0066ff;
+    color: #fff;
+    font-weight: bold;
+}

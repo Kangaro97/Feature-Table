@@ -8,6 +8,11 @@ export default class Filter extends Component {
 		this.setState({ filterStr: e.target.value });
 	};
 
+	applyFilter = (e) => {
+		this.props.filterFunc(this.state.filterStr);
+		e.preventDefault();
+	};
+
 	resetFilter = () => {
 		this.setState({ filterStr: '' });
 		this.props.resetFilter();
@@ -15,7 +20,7 @@ export default class Filter extends Component {
 
 	render() {
 		return (
-			<form action="#">
+			<form onSubmit={this.applyFilter}>
 				<input
 					type="text"
 					name="filterInput"
@@ -23,12 +28,7 @@ export default class Filter extends Component {
 					value={this.state.filterStr}
 					onChange={this.inputChanged}
 				/>
-				<input
-					type="submit"
-					name="filterSubmit"
-					value="Найти"
-					onClick={this.props.filterFunc.bind(this, this.state.filterStr)}
-				/>
+				<input type="submit" name="filterSubmit" value="Найти" />
 				<input
 					type="button"
 					name="filterCancel"

@@ -1,27 +1,27 @@
 import React from 'react';
 
-const userInfo = ({ data }) => {
+const userInfo = ({ firstName, lastName, description, address }) => {
 	return (
 		<div className="UserInfo">
 			<p>
 				Выбран пользователь
-				<b>{data.firstName + ' ' + data.lastName}</b>
+				<b>{firstName + ' ' + lastName}</b>
 			</p>
 			<p>
 				Описание:
-				{data.description}
+				{description}
 			</p>
 			<p>
-				Адрес проживания: <b>{data.address.streetAddress}</b>
+				Адрес проживания: <b>{address.streetAddress}</b>
 			</p>
 			<p>
-				Город: <b>{data.address.city}</b>
+				Город: <b>{address.city}</b>
 			</p>
 			<p>
-				Провинция/штат: <b>{data.address.state}</b>
+				Провинция/штат: <b>{address.state}</b>
 			</p>
 			<p>
-				Индекс: <b>{data.address.zip}</b>
+				Индекс: <b>{address.zip}</b>
 			</p>
 		</div>
 	);

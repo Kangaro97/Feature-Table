@@ -2,13 +2,13 @@ import React from 'react';
 import Row from './Row/Row';
 
 const table = ({ children, data, onRowClicked }) => {
-	let rows = data.map(({ id, firstName, lastName, email, phone }) => {
+	let rows = data.map((item) => {
 		return {
-			id,
-			firstName,
-			lastName,
-			email,
-			phone,
+			id: item.id ? item.id : '—',
+			firstName: item.firstName ? item.firstName : '—',
+			lastName: item.lastName ? item.lastName : '—',
+			email: item.email ? item.email : '—',
+			phone: item.phone ? item.phone : '—',
 		};
 	});
 	return (
@@ -20,7 +20,6 @@ const table = ({ children, data, onRowClicked }) => {
 				))}
 			</tbody>
 		</table>
-
 	);
 };
 

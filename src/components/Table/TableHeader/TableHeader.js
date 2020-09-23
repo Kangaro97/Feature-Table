@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './TableHeader.module.css';
 
 const tHeader = ({ sortParam, sortFunc }) => {
-	console.log('sort: ', sortParam);
+	console.log('sortParam from THeader: ', sortParam);
 	const headers = ['id', 'firstName', 'lastName', 'email', 'phone'];
 	const getClassName = (key) => {
 		if (!key) {

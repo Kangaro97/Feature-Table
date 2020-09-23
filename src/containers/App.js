@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import Table from '../components/Table/Table';
 import LoadButton from '../components/Button/LoadButton';
+import NewRowContainer from '../components/NewRow/NewRowContainer';
+import NewRowForm from '../components/NewRow/NewRowForm/NewRowForm';
 import Filter from '../components/Filter/Filter';
-import UserInfo from '../components/UserInfo/UserInfo';
+import Table from '../components/Table/Table';
 import THeader from '../components/Table/TableHeader/TableHeader';
-import Pagination from '../components/Table/Pagination/Pagination';
+import Pagination from '../components/Pagination/Pagination';
+import UserInfo from '../components/UserInfo/UserInfo';
+
 import loadJSON from '../lib/load';
 import getPaginated from '../lib/getPaginated';
 import sort from '../lib/sort';
@@ -23,7 +26,7 @@ export default class App extends Component {
 	state = {
 		isFiltered: false,
 		filtered: [],
-		displaedData: [],
+		displayedData: [],
 		sortParam: { key: null, order: null },
 		currentPage: 1,
 		isLoading: false,
@@ -37,7 +40,7 @@ export default class App extends Component {
 				console.log(res);
 				this.data = res;
 				this.setState({
-					displaedData: getPaginated(res, 1, this.numberPerPage),
+					displayedData: getPaginated(res, 1, this.numberPerPage),
 					isLoading: false,
 					sortParam: { key: null, order: null },
 				});
@@ -53,7 +56,7 @@ export default class App extends Component {
 		this.setState({ currentPage: number });
 		// на основе номера страницы и состояния фильтрации делаем выборку данных для отображения
 		this.setState((state) => ({
-			displaedData: getPaginated(
+			displayedData: getPaginated(
 				state.isFiltered ? state.filtered : this.data,
 				number,
 				this.numberPerPage
@@ -63,13 +66,13 @@ export default class App extends Component {
 
 	sortFunc = (key, order) => {
 		// копируем отображаемые данные для сортировки
-		const unsorted = [...this.state.displaedData];
+		const unsorted = [...this.state.displayedData];
 		// сортируем
 		const sorted = sort(unsorted, key, order);
 		console.log('Sorted: ', sorted);
 		//TODO: show process of reloading component? When 'sort' should be added?
 		// присваеваем новое, сортированное значение данным и новое значение параметрам сортировки
-		this.setState({ displaedData: sorted, sortParam: { key, order } });
+		this.setState({ displayedData: sorted, sortParam: { key, order } });
 	};
 
 	filterFunc = (filterStr) => {
@@ -80,7 +83,7 @@ export default class App extends Component {
 		// получаем первую страницу отфильтрованных данных
 		const paginated = getPaginated(filtered, 1, this.numberPerPage);
 		// присваеваем отфильтрованным и отображаемым данным новое значение
-		this.setState({ isFiltered: true, filtered, displaedData: paginated });
+		this.setState({ isFiltered: true, filtered, displayedData: paginated });
 	};
 
 	resetFilter = () => {
@@ -89,7 +92,8 @@ export default class App extends Component {
 			{
 				isFiltered: false,
 				filtered: [],
-				displaedData: getPaginated(this.data, 1, this.numberPerPage),
+				displayedData: getPaginated(this.data, 1, this.numberPerPage),
+				currentPage: 1,
 			},
 			() => {
 				this.sortFunc(this.state.sortParam.key, this.state.sortParam.order);
@@ -97,9 +101,21 @@ export default class App extends Component {
 		);
 	};
 
+	addNewRow = (newRow) => {
+		console.log('newRow from App:', newRow);
+		this.data.unshift(newRow);
+		const displayedData = [...this.state.displayedData];
+		displayedData.unshift(newRow);
+		console.log('Displayed data from addNewRow:', displayedData);
+		this.setState({ displayedData: displayedData }, () => {
+			console.log('All data:', this.data);
+			console.log('Displayed data from state:', this.state.displayedData);
+		});
+	};
+
 	showInfo = (id) => {
 		if (id) {
-			const info = this.state.displaedData.find((item) => item.id === id);
+			const info = this.state.displayedData.find((item) => item.id === id);
 			this.setState({ userInfo: info });
 		}
 	};
@@ -113,25 +129,27 @@ export default class App extends Component {
 		}
 
 		let userInfo;
-		if (Object.keys(this.state.userInfo).length !== 0) {
+		if (!this.state.isLoading && Object.keys(this.state.userInfo).length !== 0) {
 			userInfo = <UserInfo data={this.state.userInfo} />;
 		} else {
 			userInfo = null;
 		}
 
+		let newRowContainer;
 		let filter;
 		let table;
 		let pagination;
-		if (Object.keys(this.data).length !== 0) {
+		if (!this.state.isLoading && Object.keys(this.data).length !== 0) {
+			newRowContainer = (
+				<NewRowContainer>
+					<NewRowForm addNewRow={this.addNewRow} />
+				</NewRowContainer>
+			);
 			filter = (
 				<Filter filterFunc={this.filterFunc} resetFilter={this.resetFilter} />
 			);
 			table = (
-				<Table
-					data={this.state.displaedData}
-					sortParam={this.state.sortParam}
-					onRowClicked={this.showInfo}
-					sortFunc={this.sortFunc}>
+				<Table data={this.state.displayedData} onRowClicked={this.showInfo}>
 					<THeader sortParam={this.state.sortParam} sortFunc={this.sortFunc} />
 				</Table>
 			);
@@ -146,6 +164,7 @@ export default class App extends Component {
 				/>
 			);
 		} else {
+			newRowContainer = null;
 			filter = null;
 			table = null;
 			pagination = null;
@@ -163,6 +182,7 @@ export default class App extends Component {
 				/>
 				{loginStatus}
 				<div>
+					{newRowContainer}
 					{filter}
 					{table}
 					{pagination}

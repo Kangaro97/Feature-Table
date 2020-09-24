@@ -2,7 +2,6 @@ import React from 'react';
 import classes from './TableHeader.module.css';
 
 const tHeader = ({ sortParam, sortFunc }) => {
-	console.log('sortParam from THeader: ', sortParam);
 	const headers = ['id', 'firstName', 'lastName', 'email', 'phone'];
 	const getClassName = (key) => {
 		if (!key) {
@@ -18,15 +17,12 @@ const tHeader = ({ sortParam, sortFunc }) => {
 		}
 	};
 	const requestSortData = (header) => {
-		console.log('order: ', sortParam.order);
-		console.log('!sort.order', !sortParam.order);
 		if (!sortParam.order || sortParam.order === 'descending') {
 			sortParam.order = 'ascending';
 		} else {
 			sortParam.order = 'descending';
 		}
 		sortParam.key = header;
-		console.log('Before sortData', sortParam);
 		sortFunc(sortParam.key, sortParam.order);
 	};
 

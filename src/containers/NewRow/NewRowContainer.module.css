@@ -1,0 +1,25 @@
+.container {
+    text-align: center;
+}
+
+.button {
+    width: 50%;
+    margin: .5rem 0;
+    padding: .5rem;
+    font-size: 1.2rem;
+    background-color: #0066ff;
+	color: #fff;
+    border: 1px solid #fff;
+    border-radius: .4rem;
+    transition-duration: 0.3s;
+}
+
+.button:hover:enabled {
+	color: #fff;
+	background-color: #0066ff;
+}
+
+.button:disabled {
+	border: 1px solid #808080;
+	color: #808080;
+}

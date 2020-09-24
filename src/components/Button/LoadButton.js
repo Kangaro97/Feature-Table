@@ -1,22 +1,15 @@
 import React from 'react';
+import classes from './LoadButton.module.css';
 
-const loadButton = ({type, buttonClicked}) => {
-    let volumeType = '';
-
-    switch (type) {
-        case 'small':
-            volumeType = 'малый'
-            break;
-        case 'big':
-            volumeType = 'большой'
-            break;
-        default:
-            volumeType = 'малый'
-    }
-
-    return (
-        <button onClick={buttonClicked}>Загрузить {volumeType} объём</button>
-    );
+const loadButton = ({ type, buttonClicked, isLoading }) => {
+	return (
+		<button
+			className={classes.button}
+			onClick={buttonClicked}
+			disabled={isLoading}>
+			Load {type} data
+		</button>
+	);
 };
 
 export default loadButton;

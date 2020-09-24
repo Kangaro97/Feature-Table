@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
-import './App.css';
-import LoadButton from '../components/Button/LoadButton';
-import NewRowContainer from '../components/NewRow/NewRowContainer';
-import NewRowForm from '../components/NewRow/NewRowForm/NewRowForm';
-import Filter from '../components/Filter/Filter';
-import Table from '../components/Table/Table';
-import THeader from '../components/Table/TableHeader/TableHeader';
-import Pagination from '../components/Pagination/Pagination';
-import UserInfo from '../components/UserInfo/UserInfo';
+import React, { Component, createRef } from 'react';
+import classes from './Main.module.css';
+import Spinner from '../../templates/spinner';
+import LoadButton from '../../components/Button/LoadButton';
+import NewRowContainer from '../NewRow/NewRowContainer';
+import NewRowForm from '../../components/NewRowForm/NewRowForm';
+import Filter from '../../components/Filter/Filter';
+import Table from '../../components/Table/Table';
+import THeader from '../../components/Table/TableHeader/TableHeader';
+import Pagination from '../../components/Pagination/Pagination';
+import UserInfo from '../../components/UserInfo/UserInfo';
 
-import loadJSON from '../lib/load';
-import getPaginated from '../lib/getPaginated';
-import sort from '../lib/sort';
-import filter from '../lib/filter';
+import loadJSON from '../../lib/load';
+import getPaginated from '../../lib/getPaginated';
+import sort from '../../lib/sort';
+import filter from '../../lib/filter';
 
-export default class App extends Component {
+export default class Main extends Component {
 	url = {
 		small:
 			'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}',
@@ -23,6 +24,7 @@ export default class App extends Component {
 	};
 	numberPerPage = 50;
 	data = [];
+	ref = createRef();
 	state = {
 		isFiltered: false,
 		filtered: [],
@@ -37,8 +39,27 @@ export default class App extends Component {
 		this.setState({ isLoading: true });
 		loadJSON(url)
 			.then((res) => {
-				console.log(res);
-				this.data = res;
+				this.data = res.map((item) => {
+					return {
+						id: item.id ? item.id : '—',
+						firstName: item.firstName ? item.firstName : '—',
+						lastName: item.lastName ? item.lastName : '—',
+						email: item.email ? item.email : '—',
+						phone: item.phone ? item.phone : '—',
+						description: item.description ? item.description : '—',
+						address: item.address
+							? {
+									city: item.address.city ? item.address.city : '—',
+									state: item.address.state ? item.address.state : '—',
+									zip: item.address.zip ? item.address.zip : '—',
+							  }
+							: {
+									city: '—',
+									state: '—',
+									zip: '—',
+							  },
+					};
+				});
 				this.setState({
 					displayedData: getPaginated(res, 1, this.numberPerPage),
 					isLoading: false,
@@ -69,17 +90,13 @@ export default class App extends Component {
 		const unsorted = [...this.state.displayedData];
 		// сортируем
 		const sorted = sort(unsorted, key, order);
-		console.log('Sorted: ', sorted);
-		//TODO: show process of reloading component? When 'sort' should be added?
 		// присваеваем новое, сортированное значение данным и новое значение параметрам сортировки
 		this.setState({ displayedData: sorted, sortParam: { key, order } });
 	};
 
 	filterFunc = (filterStr) => {
-		console.log('filterStr from App: ', filterStr);
 		//применяем фильтр ко всем данным
 		const filtered = filter(this.data, filterStr);
-		console.log('filtered from App: ', filtered);
 		// получаем первую страницу отфильтрованных данных
 		const paginated = getPaginated(filtered, 1, this.numberPerPage);
 		// присваеваем отфильтрованным и отображаемым данным новое значение
@@ -102,37 +119,27 @@ export default class App extends Component {
 	};
 
 	addNewRow = (newRow) => {
-		console.log('newRow from App:', newRow);
 		this.data.unshift(newRow);
 		const displayedData = [...this.state.displayedData];
 		displayedData.unshift(newRow);
-		console.log('Displayed data from addNewRow:', displayedData);
-		this.setState({ displayedData: displayedData }, () => {
-			console.log('All data:', this.data);
-			console.log('Displayed data from state:', this.state.displayedData);
-		});
+		this.setState({ displayedData: displayedData });
 	};
 
 	showInfo = (id) => {
 		if (id) {
 			const info = this.state.displayedData.find((item) => item.id === id);
-			this.setState({ userInfo: info });
+			this.setState({ userInfo: info }, () => {
+				this.ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			});
 		}
 	};
 
 	render() {
-		let loginStatus;
+		let spinner;
 		if (this.state.isLoading) {
-			loginStatus = <p>Loading...</p>;
+			spinner = <Spinner />;
 		} else {
-			loginStatus = <p>Not loading.</p>;
-		}
-
-		let userInfo;
-		if (!this.state.isLoading && Object.keys(this.state.userInfo).length !== 0) {
-			userInfo = <UserInfo data={this.state.userInfo} />;
-		} else {
-			userInfo = null;
+			spinner = null;
 		}
 
 		let newRowContainer;
@@ -170,20 +177,34 @@ export default class App extends Component {
 			pagination = null;
 		}
 
+		let userInfo;
+		if (
+			!this.state.isLoading &&
+			Object.keys(this.state.userInfo).length !== 0
+		) {
+			userInfo = <UserInfo ref={this.ref} data={this.state.userInfo} />;
+		} else {
+			userInfo = null;
+		}
+
 		return (
-			<div className="App">
-				<LoadButton
-					type="small"
-					buttonClicked={this.getJSON.bind(this, this.url.small)}
-				/>
-				<LoadButton
-					type="big"
-					buttonClicked={this.getJSON.bind(this, this.url.big)}
-				/>
-				{loginStatus}
+			<div className={classes.main}>
+				<div className={classes.buttonContainer}>
+					<LoadButton
+						type="small"
+						buttonClicked={this.getJSON.bind(this, this.url.small)}
+						isLoading={this.state.isLoading}
+					/>
+					<LoadButton
+						type="big"
+						buttonClicked={this.getJSON.bind(this, this.url.big)}
+						isLoading={this.state.isLoading}
+					/>
+				</div>
+				{spinner}
 				<div>
-					{newRowContainer}
 					{filter}
+					{newRowContainer}
 					{table}
 					{pagination}
 					{userInfo}

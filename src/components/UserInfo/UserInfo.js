@@ -1,29 +1,36 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import classes from './UserInfo.module.css';
 
-const userInfo = ({ firstName, lastName, description, address }) => {
+const userInfo = forwardRef(({ data}, ref ) => {
 	return (
-		<div className="UserInfo">
-			<p>
-				Выбран пользователь
-				<b>{firstName + ' ' + lastName}</b>
+		<div className={classes.info} ref={ref}>
+			<p className={classes.label}>
+				<span>Выбран пользователь</span>
+				<b>{data.firstName + ' ' + data.lastName}</b>
 			</p>
-			<p>
-				Описание:
-				{description}
+			<p className={classes.label}>
+				<span>Описание:</span>
+
+				<br />
+				{data.description}
 			</p>
-			<p>
-				Адрес проживания: <b>{address.streetAddress}</b>
+			<p className={classes.label}>
+				<span>Адрес проживания:</span>
+				<b>{data.address.streetAddress}</b>
 			</p>
-			<p>
-				Город: <b>{address.city}</b>
+			<p className={classes.label}>
+				<span>Город:</span>
+				<b>{data.address.city}</b>
 			</p>
-			<p>
-				Провинция/штат: <b>{address.state}</b>
+			<p className={classes.label}>
+				<span>Провинция/штат:</span>
+				<b>{data.address.state}</b>
 			</p>
-			<p>
-				Индекс: <b>{address.zip}</b>
+			<p className={classes.label}>
+				<span>Индекс:</span>
+				<b>{data.address.zip}</b>
 			</p>
 		</div>
 	);
-};
+});
 export default userInfo;

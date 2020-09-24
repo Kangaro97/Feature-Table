@@ -1,0 +1,11 @@
+.info {
+    text-align: justify;
+}
+
+.label {
+    margin: .5rem 0;
+}
+
+.label span {
+    margin-right: .5rem;
+}

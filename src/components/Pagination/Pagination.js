@@ -4,11 +4,9 @@ import classes from './Pagination.module.css';
 const pagination = ({ pageСount, currentPage, choosePage }) => {
 	const pages = [];
 	const prevPage = () => {
-		console.log(currentPage - 1 > 0 ? currentPage - 1 : 1);
 		return currentPage - 1 > 0 ? currentPage - 1 : 1;
 	};
 	const nextPage = () => {
-		console.log(currentPage + 1 <= pageСount ? currentPage + 1 : pageСount);
 		return currentPage + 1 <= pageСount ? currentPage + 1 : pageСount;
 	};
 	// максимальное число отображаемых кнопок - 5
@@ -19,12 +17,15 @@ const pagination = ({ pageСount, currentPage, choosePage }) => {
 			pages.push(i);
 		}
 	} else if (currentPage >= pageСount - 2) {
+		// если до конца списта осталось меньше 2 страниц,
+		// то показываем только 5 последних номеров
 		for (let i = pageСount; i > pageСount - 5; i--) {
 			pages.push(i);
 		}
 		pages.reverse();
 	} else {
-		// если количество всех страниц больше 5, то берём два значения до текущей страницы и два значения после
+		// если количество всех страниц больше 5,
+		// то берём два значения до текущей страницы и два значения после
 		for (let i = currentPage - 2; i <= currentPage + 2; i++) {
 			pages.push(i);
 		}

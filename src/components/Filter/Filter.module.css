@@ -1,0 +1,52 @@
+.form {
+	max-width: 80rem;
+	padding: 1rem 0;
+	margin: 0.5rem auto;
+	text-align: right;
+}
+
+.text {
+	cursor: text;
+	line-height: 1.5rem;
+	margin-bottom: 0.5rem;
+	padding: 0.5rem;
+	font-size: 1.2rem;
+	border: 1px solid #808080;
+	border-radius: 0.3rem;
+}
+
+.buttonContainer {
+	display: inline-block;
+}
+
+.button {
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	line-height: 1.5rem;
+	margin-left: 0.5rem;
+	background-color: #fff;
+	color: #0066ff;
+	border: 1px solid #0066ff;
+	border-radius: 0.3rem;
+	transition-duration: 0.3s;
+}
+
+.button:hover:enabled {
+	color: #fff;
+	background-color: #0066ff;
+}
+
+.button:disabled {
+	border: 1px solid #808080;
+	color: #808080;
+}
+
+.button.reset {
+	color: #808080;
+	border: 1px solid #808080;
+}
+
+.button.reset:hover {
+	color: #fff;
+	background-color: #808080;
+}

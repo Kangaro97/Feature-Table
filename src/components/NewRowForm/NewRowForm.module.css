@@ -1,0 +1,79 @@
+.form {
+	margin: 0 2rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: flex-end;
+}
+
+@media (min-width: 400px) {
+	.form {
+		justify-content: space-between;
+	}
+}
+
+.label {
+	display: inline-block;
+	width: 40%;
+	min-width: 10rem;
+	margin-bottom: 1rem;
+	text-align: left;
+}
+
+.text {
+	display: block;
+	width: 100%;
+	cursor: text;
+	line-height: 1.5rem;
+	padding: 0.5rem;
+	font-size: 1.2rem;
+	border: 1px solid #808080;
+	border-radius: 0.3rem;
+}
+
+.buttonContainer {
+	width: 100%;
+}
+
+.button {
+	width: 25%;
+	min-width: 7rem;
+	margin-bottom: 1rem;
+	font-size: 1.2rem;
+	padding: 0.5rem 2rem;
+	line-height: 1.5rem;
+	background-color: #fff;
+	color: #0066ff;
+	border: 1px solid #0066ff;
+	border-radius: 0.3rem;
+	transition-duration: 0.3s;
+}
+
+.button:hover:enabled {
+	color: #fff;
+	background-color: #0066ff;
+}
+
+.button:disabled {
+	border: 1px solid #808080;
+	color: #808080;
+}
+
+.button.reset {
+    display: block;
+    margin: 0 auto;
+	color: #808080;
+	border: 1px solid #808080;
+}
+
+@media (min-width: 400px) {
+	.button.reset {
+        display: inline-block;
+		margin-left: 1rem;
+	}
+}
+
+.button.reset:hover {
+	color: #fff;
+	background-color: #808080;
+}

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import classes from './Filter.module.css';
 
 export default class Filter extends Component {
 	state = { filterStr: '' };
 
 	inputChanged = (e) => {
-		console.log('filterStr from Filter: ', this.state.filterStr);
 		this.setState({ filterStr: e.target.value });
 	};
 
@@ -20,21 +20,31 @@ export default class Filter extends Component {
 
 	render() {
 		return (
-			<form onSubmit={this.applyFilter}>
+			<form className={classes.form} onSubmit={this.applyFilter}>
 				<input
+					className={classes.text}
 					type="text"
 					name="filterInput"
 					placeholder="Filter text"
 					value={this.state.filterStr}
 					onChange={this.inputChanged}
+					required
 				/>
-				<input type="submit" name="filterSubmit" value="Найти" />
-				<input
-					type="button"
-					name="filterCancel"
-					value="Сбросить"
-					onClick={this.resetFilter}
-				/>
+				<div className={classes.buttonContainer}>
+					<input
+						className={classes.button}
+						type="submit"
+						name="filterSubmit"
+						value="Найти"
+					/>
+					<input
+						className={`${classes.button} ${classes.reset}`}
+						type="button"
+						name="filterCancel"
+						value="Сбросить"
+						onClick={this.resetFilter}
+					/>
+				</div>
 			</form>
 		);
 	}

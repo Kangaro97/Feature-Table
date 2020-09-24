@@ -1,0 +1,27 @@
+.table {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+	border-spacing: 0;
+	text-align: left;
+}
+
+.table td,
+.table th {
+	height: 3rem;
+	border-bottom: 1px solid #808080;
+}
+
+.table tr {
+    cursor: pointer;
+    padding: 0 1rem;
+}
+
+.table tr td:first-child,
+.table tr th:first-child {
+    padding-left: 1rem;
+}
+.table tr td:last-child,
+.table tr th:last-child {
+    padding-right: 1rem;
+}
